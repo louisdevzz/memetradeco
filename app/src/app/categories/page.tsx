@@ -1,5 +1,6 @@
 import SparkLineChart from "./spark_line_chart";
 import StackedProgressBar from "./stacked_progress_bar";
+import TreeMap from "./tree_map";
 import { IoMdArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { AiOutlineAppstore } from "react-icons/ai";
@@ -9,8 +10,6 @@ import { FaArrowDown } from "react-icons/fa6";
 import { TbDelta } from "react-icons/tb";
 import { LuInfo } from "react-icons/lu";
 import { HiMiniSignal } from "react-icons/hi2";
-import { FaXTwitter } from "react-icons/fa6";
-import { HiChevronRight } from "react-icons/hi2";
 
 const categories = [
   {
@@ -74,6 +73,21 @@ const categories = [
     positive: false,
   },
 ];
+
+function topCategories(list: any[]) {
+  return list
+    .sort((a, b) => {
+      const aValue = parseFloat(a.mindShare.replace("%", ""));
+      const bValue = parseFloat(b.mindShare.replace("%", ""));
+      return bValue - aValue; // Sắp xếp giảm dần
+    })
+    .slice(0, 10)
+    .map((item) => ({
+      name: item.name,
+      mindShare: item.mindShare,
+    }));
+}
+
 const list = [
   {
     order: 1,
@@ -365,6 +379,8 @@ const list = [
   },
 ];
 const Page = () => {
+  const top10Categories = topCategories(list);
+
   return (
     <div className="text-white h-full w-screen m-0 p-0 box-border bg-[#0B0B0B]">
       <div className=" w-full h-[32px]"> </div>
@@ -509,18 +525,8 @@ const Page = () => {
             </div>
 
             {/* Image */}
-            <div className="grid grid-cols-11 grid-rows-4 w-full h-[290px] gap-1 ">
-              <div className="col-start-1 col-end-6 row-start-1 row-end-3 bg-red-500"></div>
-              <div className="col-start-6 col-end-10 row-start-1 row-end-3 bg-red-500"></div>
-              <div className="col-start-10 col-end-12 row-start-1 row-end-3 bg-red-500"></div>
-              <div className="col-start-1 col-end-6 row-start-3 row-end-5 bg-red-500"></div>
-              <div className="col-start-6 col-end-8 row-start-3 row-end-4 bg-red-500"></div>
-              <div className="col-start-6 col-end-8 row-start-4 row-end-5 bg-red-500"></div>
-              <div className="col-start-8 col-end-10 row-start-3 row-end-4 bg-red-500"></div>
-              <div className="col-start-8 col-end-10 row-start-4 row-end-5 bg-red-500"></div>
-              <div className="col-start-10 col-end-12 row-start-3 row-end-4 bg-red-500"></div>
-              <div className="col-start-10 col-end-12 row-start-4 row-end-5 bg-red-500"></div>
-            </div>
+
+            <TreeMap data={top10Categories} />
           </div>
 
           {/* Top 10 Categories */}
@@ -680,56 +686,7 @@ const Page = () => {
             </tbody>
           </table>
         </div>
-
-        {/* Help */}
-        <div className="mt-8 flex h-[200px] border rounded border-[#171717]">
-          {/* Agent Builder */}
-          <div className="flex-1 flex flex-col gap-2 justify-center items-center border-r border-[#171717]">
-            <div className="text-[35px] font-bold">Agent builder?</div>
-            <div className="max-w-xs text-center text-white/60 text-sm">
-              Get the best Twitter + Multichain API, designed especially for the
-              AI agents.
-            </div>
-            <button className="mt-2 px-3 py-1 bg-[#BBF7D0] rounded-full text-black font-[450]">
-              Get Started?
-            </button>
-          </div>
-
-          {/* Trader */}
-          <div className="flex-1 flex flex-col gap-2 justify-center items-center">
-            <div className="text-[35px] font-bold">Trader?</div>
-            <div className="max-w-xs text-center text-white/60 text-sm">
-              We are building the most advanced X & multi-chain analytics for
-              human and AI investors.
-            </div>
-            <button className="mt-2 px-3 py-1 bg-[#BBF7D0] rounded-full text-black font-[450]">
-              Get Started?
-            </button>
-          </div>
-        </div>
       </div>
-
-      {/* Footer */}
-      <footer className="flex items-center gap-7 text-white/60 text-xs text-left font-light py-6 w-[1300px] mx-auto mt-12">
-        <div className="flex items-center justify-center w-[30px] aspect-square rounded-full bg-[#1B1B1B] text-white">
-          <FaXTwitter size={16} />
-        </div>
-        <div className="flex gap-1">
-          Copyright &copy; 2025
-          <a href="#" className="underline">
-            dao.cookie.fun
-          </a>
-          • All Rights Reserved
-          <a href="#" className="ml-5 flex items-center gap-1 underline">
-            Privacy Policy
-            <HiChevronRight size={10} />
-          </a>
-          <a href="#" className="ml-5 flex items-center gap-1 underline">
-            Terms of Service
-            <HiChevronRight size={10} />
-          </a>
-        </div>
-      </footer>
       <div className="bg-[#0B0B0B] h-[50px] w-full"></div>
     </div>
   );
